@@ -73,7 +73,7 @@ if (isset($_POST['order'])) {
     <script>
         var subjectObject = {
             "CALABARZON": {
-                "Cavite": ["Alfonso", "Amadeo", "Bacoor", "Carmona", "Cavite", "Dasmarinas", "Gen. Emilio Aguinaldo", "Gen. Mariano Alvarez", "General Trias", "Imus", "Indang", "Kawit", "Magallanes", "Maragondon", "Mendez", "Naic", "Noveleta", "Rosario", "Silang", "Tagaytay", "Tanza", "Ternate", "Trece Martires"],
+                "Cavite": ["Alfonso", "Amadeo", "Bacoor", "Carmona", "Cavite City", "Dasmarinas", "Gen. Emilio Aguinaldo", "Gen. Mariano Alvarez", "General Trias", "Imus", "Indang", "Kawit", "Magallanes", "Maragondon", "Mendez", "Naic", "Noveleta", "Rosario", "Silang", "Tagaytay", "Tanza", "Ternate", "Trece Martires"],
                 "Laguna": ["Alaminos", "Bay", "Binan", "Cabuyao", "Calamba", "Calauan", "Cavinti", "Famy", "Kalayaan(LA)", "Liliw", "Los Banos", "Luisiana", "Lumban", "Mabitac", "Magdalena", "Majayjay", "Nagcarlan", "Paete", "Pagsanjan", "Pakil", "Pangil", "Pila", "Rizal", "San Pablo", "San Pedro", "Santa Maria", "Santa Rosa", "Siniloan", "Victoria"],
                 "Batangas": ["Agoncillo", "Alitagtag", "Balayan", "Balete", "Batangas", "Bauan", "Calaca", "Calatagan", "Cuenca", "Ibaan", "Laurel", "Lemery", "Lian", "Lipa", "Lobo", "Mabini", "Malvar", "Mataasnakahoy", "Nasugbu", "Padre Garcia", "Rosario", "San Jose", "San Juan", "San Luis", "San Nicolas", "San Pascual", "Santa Teresita", "Santo Tomas", "Taal", "Talisay", "Tanauan", "Taysan", "Tingloy", "Tuy"],
                 "Rizal": ["Angono", "Antipolo", "Baras", "Binangonan", "Cainta", "Cardona", "JalaJala", "Morong", "Pilila", "Rodriguez", "San Mateo", "Tanay", "Taytay", "Teresa"],

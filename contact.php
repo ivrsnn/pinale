@@ -6,11 +6,12 @@ session_start();
 
 $user_id = $_SESSION['user_id'];
 
-if(!isset($user_id)){
-   header('location:login.php');
-};
+if (!isset($user_id)) {
+    header('location:login.php');
+}
+;
 
-if(isset($_POST['send'])){
+if (isset($_POST['send'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -19,9 +20,9 @@ if(isset($_POST['send'])){
 
     $select_message = mysqli_query($conn, "SELECT * FROM `message` WHERE name = '$name' AND email = '$email' AND number = '$number' AND message = '$msg'") or die('query failed');
 
-    if(mysqli_num_rows($select_message) > 0){
+    if (mysqli_num_rows($select_message) > 0) {
         $message[] = 'message sent already!';
-    }else{
+    } else {
         mysqli_query($conn, "INSERT INTO `message`(user_id, name, email, number, message) VALUES('$user_id', '$name', '$email', '$number', '$msg')") or die('query failed');
         $message[] = 'message sent successfully!';
     }
@@ -32,62 +33,65 @@ if(isset($_POST['send'])){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>contact</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact</title>
 
-   <!-- font awesome cdn link  -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-   <!-- custom admin css file link  -->
-   <link rel="stylesheet" href="css/style.css">
+    <!-- custom admin css file link  -->
+    <link rel="stylesheet" href="css/style.css">
 
-   <style>
-      body {
-         background-image: url('images/haha.jpg');
-         background-repeat: no-repeat;
-         background-size: cover;
-         background-position: center;
-         background-attachment: fixed;
-         height: 100vh;
-         margin: 0;
-      }
-
-   </style>
+    <style>
+        body {
+            background-image: url('images/haha.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
 
 </head>
+
 <body>
-   
-<?php @include 'header.php'; ?>
 
-<section class="heading">
-    <h3>message us!</h3>
-    <p> <a href="home.php">home</a> / contact </p>
-</section>
+    <?php @include 'header.php'; ?>
 
-<section class="contact">
+    <section class="heading">
+        <h3>message us!</h3>
+        <p> <a href="home.php">Home</a> / Contact </p>
+    </section>
 
-    <form action="" method="POST">
-        <h3>send us message!</h3>
-        <input type="text" name="name" placeholder="enter your name" class="box" required> 
-        <input type="email" name="email" placeholder="enter your email" class="box" required>
-        <input type="number" name="number" placeholder="enter your number" class="box" required>
-        <textarea name="message" class="box" placeholder="enter your message" required cols="30" rows="10"></textarea>
-        <input type="submit" value="send message" name="send" class="btn">
-    </form>
+    <section class="contact">
 
-</section>
+        <form action="" method="POST">
+            <h3>send us message!</h3>
+            <input type="text" name="name" placeholder="enter your name" class="box" required>
+            <input type="email" name="email" placeholder="enter your email" class="box" required>
+            <input type="number" name="number" placeholder="enter your number" class="box" required>
+            <textarea name="message" class="box" placeholder="enter your message" required cols="30"
+                rows="10"></textarea>
+            <input type="submit" value="send message" name="send" class="btn">
+        </form>
 
-
-
+    </section>
 
 
 
-<?php @include 'footer.php'; ?>
 
-<script src="js/script.js"></script>
+
+
+    <?php @include 'footer.php'; ?>
+
+    <script src="js/script.js"></script>
 
 </body>
+
 </html>

@@ -8,12 +8,6 @@
             <a href="about.php">about</a>
             <a href="contact.php">contact</a>
             <a href="shop.php">shop</a>
-        </div>
-
-        <div class="box">
-            <h3> </h3>
-            <a href="login.php">login</a>
-            <a href="register.php">register</a>
             <a href="orders.php">orders</a>
             <a href="cart.php">cart</a>
             <a href="wishlist.php">wishlist</a>
@@ -29,7 +23,8 @@
 
         <div class="box">
             <h3>follow us</h3>
-            <a href="https://www.facebook.com/profile.php?id=61555792627394&mibextid=ZbWKwL"><i class="fab fa-facebook-f"></i>facebook</a>
+            <a href="https://www.facebook.com/profile.php?id=61555792627394&mibextid=ZbWKwL"><i
+                    class="fab fa-facebook-f"></i>facebook</a>
         </div>
 
     </div>

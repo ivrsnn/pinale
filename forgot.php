@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
 
    <style>
       body {
-         background-image: url('images/bgbgbg.jpg');
+         background-image: url('images/pompom.jpg');
          background-size: cover;
          background-repeat: no-repeat;
       }
