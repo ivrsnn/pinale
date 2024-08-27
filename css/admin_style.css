@@ -391,8 +391,9 @@ section{
    border:var(--border);
    background-color: var(--white);
    box-shadow: var(--box-shadow);
-   border-radius: .5rem;
+   border-radius: 1.5rem;
    position: relative;
+   height: 100%;
 }
 
 .show-products .box-container .box .image{

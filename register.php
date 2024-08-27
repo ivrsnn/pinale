@@ -13,6 +13,33 @@ if (isset($_POST['submit'])) {
    $filter_cpass = filter_var($_POST['cpass'], FILTER_SANITIZE_STRING);
    $cpass = mysqli_real_escape_string($conn, $filter_cpass);
 
+   $passwordError = "";
+   if (!empty($pass) && !empty($cpass)) {
+      $password = htmlspecialchars($pass);
+      $confirmPassword = htmlspecialchars($cpass);
+
+      // Password pattern that is to find match containing 
+      // at least 1 uppercase, lowercase, number and special characters
+      // and also length 8
+      $password_pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
+
+      if ($password != $confirmPassword) {
+         $passwordError .= "Passwords are not same.\n";
+      }
+      if (!preg_match($password_pattern, $password)) {
+         $passwordError .= "Password must have at least 8 character length with mimimum 1 uppercase, 1 lowercase, 1 number and 1 special characters.\n";
+      }
+   } else {
+      $passwordError .= "Enter password and confirm.\n";
+   }
+
+   // Prepare validation response for acknowleding user
+   if (!empty($passwordError)) {
+      $message[] = $passwordError;
+   } else {
+      $hashedPassword = md5(htmlspecialchars($pass));
+
+   }
 }
 
 ?>
@@ -118,41 +145,14 @@ if (isset($_POST['submit'])) {
 
 <?php
 
-if (isset($_POST['submit'])) {
-   $passwordError = "";
-   if (!empty($pass) && !empty($cpass)) {
-      $password = htmlspecialchars($pass);
-      $confirmPassword = htmlspecialchars($cpass);
+if (isset($_POST['submit']) && empty($passwordError)) {
+   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email'") or die('query failed');
 
-      // Password pattern that is to find match containing 
-      // at least 1 uppercase, lowercase, number and special characters
-      // and also length 8
-      $password_pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
-
-      if ($password != $confirmPassword) {
-         $passwordError .= "Passwords are not same.\n";
-      }
-      if (!preg_match($password_pattern, $password)) {
-         $passwordError .= "Password must have at least 8 character length with mimimum 1 uppercase, 1 lowercase, 1 number and 1 special characters.\n";
-      }
+   if (mysqli_num_rows($select_users) > 0) {
+      $message[] = 'user already exist!';
    } else {
-      $passwordError .= "Enter password and confirm.\n";
-   }
-
-   // Prepare validation response for acknowleding user
-   if (!empty($passwordError)) {
-      $message[] = $passwordError;
-   } else {
-      $hashedPassword = md5(htmlspecialchars($pass));
-      $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email'") or die('query failed');
-
-      if (mysqli_num_rows($select_users) > 0) {
-         $message[] = 'user already exist!';
-      } else {
-         mysqli_query($conn, "INSERT INTO `users`(name, email, password) VALUES('$name', '$email', '$hashedPassword')") or die('query failed');
-         echo '<script>document.getElementById("popup").style.display = "flex";</script>';
-      }
-
+      mysqli_query($conn, "INSERT INTO `users`(name, email, password) VALUES('$name', '$email', '$hashedPassword')") or die('query failed');
+      echo '<script>document.getElementById("popup").style.display = "flex";</script>';
    }
 }
 ?>

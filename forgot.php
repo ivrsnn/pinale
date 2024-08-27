@@ -141,7 +141,7 @@
                   });
 
                } else {
-                  document.getElementById("emailerrorMessage").innerHTML = emailVerification.message;
+                  document.getElementById("emailerrorMessage").innerHTML = data.message;
                }
             },
          });
