@@ -111,6 +111,7 @@ if (!isset($user_id)) {
 
   <?php @include 'header.php'; ?>
 
+
   <section class="heading">
     <h3>about us</h3>
     <p> <a href="home.php">Home</a> / About </p>
