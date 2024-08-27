@@ -3,7 +3,7 @@ name: Deploy to InfinityFree
 on:
   push:
     branches:
-      - main # Deploy on changes to the main branch
+      - main  # Deploy on changes to the main branch
 
 jobs:
   deploy:
@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Upload to FTP
-        uses: sebastianpopp/ftp-deploy-action@v1
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
+          local-dir: ./  # Directory to upload
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ # Adjust this if your files are in a subdirectory
-          remote-dir: /htdocs/ # Adjust this if you use a different directory on InfinityFree
+          port: 21  # Change this if your FTP server uses a different port
