@@ -97,14 +97,14 @@ if (isset($_POST['add_to_cart'])) {
       <div class="content">
          <h3>CK Handmade Flowers</h3>
          <p>Make your day extra special with our flowers!</p>
-         <a href="about.php" class="btn">discover more</a>
+         <a href="about.php" class="btn">Know more about us</a>
       </div>
 
    </section>
 
    <section class="products">
 
-      <h1 class="title">Handmade Flowers</h1>
+      <h1 class="title">Featured Products</h1>
 
       <div class="box-container">
 

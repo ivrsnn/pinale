@@ -1,26 +1,3 @@
-<?php
-@include 'config.php';
-if (isset($_POST['submit'])) {
-   $filter_email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
-   $email = mysqli_real_escape_string($conn, $filter_email);
-   $filter_pass = filter_var($_POST['pass'], FILTER_SANITIZE_STRING);
-   $pass = mysqli_real_escape_string($conn, md5($filter_pass));
-   $filter_cpass = filter_var($_POST['cpass'], FILTER_SANITIZE_STRING);
-   $cpass = mysqli_real_escape_string($conn, md5($filter_cpass));
-
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email'") or die('query failed');
-
-   if (mysqli_num_rows($select_users) > 0) {
-      if ($pass != $cpass) {
-         $message[] = 'confirm password not matched!';
-      }
-   } else {
-      $message[] = 'user not exist!';
-   }
-
-}
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,6 +53,15 @@ if (isset($_POST['submit'])) {
          font-size: 1.5rem;
 
       }
+
+      .hideForm {
+         display: none;
+      }
+
+      .errorMessage {
+         font-size: 1.5rem;
+         color: red;
+      }
    </style>
 
 
@@ -89,42 +75,156 @@ if (isset($_POST['submit'])) {
       </div>
    </div>
 
-   <?php
-   if (isset($message)) {
-      foreach ($message as $message) {
-         echo '
-      <div class="message">
-         <span>' . $message . '</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-      </div>
-      ';
-      }
-   }
-   ?>
+   <div class="message hideForm" id="errorBox">
+      <span id="errorMessage"></span>
+      <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+   </div>
 
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
    <section class="form-container">
 
-      <form action="" method="post">
+      <form id="emailForm">
+         <h3>VERIFY EMAIL</h3>
+         <span class="errorMessage" id="emailerrorMessage"></span>
+         <input type="email" name="email" id="email" class="box" placeholder="enter your email" required>
+         <input type="button" class="btn" id="emailSubmit" name="emailSubmit" value="submit" onclick="submitEmail();">
+      </form>
+
+      <form class="hideForm" id="otpForm">
+         <h3>ENTER OTP</h3>
+         <p>OTP has been sent to your email. check your email and enter otp below.</p>
+         <span class="errorMessage" id="otperrorMessage"></span>
+         <input type="hidden" name="otp" id="otp" class="box">
+         <input type="text" name="otpinput" id="otpinput" class="box" placeholder="enter your otp" required>
+         <input type="button" class="btn" id="otpSubmit" name="otpSubmit" value="submit" onclick="verifyOtp();">
+      </form>
+
+      <form action="" method="post" class="hideForm" id="passwordForm">
          <h3>CHANGE PASSWORD</h3>
-         <input type="email" name="email" class="box" placeholder="enter your email" required>
-         <input type="password" name="pass" class="box" placeholder="enter your new password" required>
-         <input type="password" name="cpass" class="box" placeholder="confirm your new password" required>
-         <input type="submit" class="btn" name="submit" value="submit">
+         <input type="hidden" name="passwordemail" id="passwordemail" class="box">
+         <input type="password" name="pass" id="pass" class="box" placeholder="enter your new password" required>
+         <input type="password" name="cpass" id="cpass" class="box" placeholder="confirm your new password" required>
+         <input type="button" class="btn" name="submit" value="submit" onclick="changePassword();">
 
       </form>
 
    </section>
 
+   <script>
+      function submitEmail() {
+         const email = document.getElementById("email").value;
+
+         $.ajax({
+            method: "POST",
+            url: "forgotPasswordFunctions.php",
+            data: {
+               type: "verifyEmail",
+               email: email,
+            },
+            success: function (data) {
+               var error = data.error;
+
+               if (!error) {
+                  const otp = data.otp;
+
+                  sendOtp(email, otp).then(function (otpSend) {
+                     if (otpSend.error) {
+                        document.getElementById("emailerrorMessage").value = otpSend.message;
+                     } else {
+                        document.getElementById("emailerrorMessage").innerHTML = "";
+                        document.getElementById('otp').value = otpSend.otp;
+                        document.getElementById('emailForm').style.display = 'none';
+                        document.getElementById('otpForm').style.display = 'block';
+                     }
+                  }).catch(function (error) {
+                     console.error("Error sending OTP:", error);
+                  });
+
+               } else {
+                  document.getElementById("emailerrorMessage").innerHTML = emailVerification.message;
+               }
+            },
+         });
+      }
+
+      function sendOtp(email, otp) {
+         return $.ajax({
+            method: "POST",
+            url: "forgotPasswordFunctions.php",
+            data: {
+               type: "sendOtp",
+               email: email,
+               otp: otp,
+            },
+            dataType: 'json' // Ensure that the response is treated as JSON
+         });
+      }
+
+
+      function verifyOtp() {
+
+         const otp = document.getElementById('otp').value;
+         const otpinput = document.getElementById('otpinput').value;
+
+         if (otp === otpinput) {
+            document.getElementById('passwordForm').style.display = 'block';
+            document.getElementById('otpForm').style.display = 'none';
+            document.getElementById("otperrorMessage").innerHTML = "";
+            const email = document.getElementById("email").value;
+            document.getElementById("passwordemail").value = email;
+
+         }
+         else {
+            document.getElementById("otperrorMessage").innerHTML = "Incorrect otp";
+         }
+      }
+
+
+      function changePassword() {
+         var errorMessage = "";
+
+         var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+         var password = document.getElementById('pass').value;
+         var cpassword = document.getElementById('cpass').value;
+
+         var email = document.getElementById('passwordemail').value;
+
+         if (cpassword !== password) {
+            errorMessage += "Passwords are not the same.\n";
+         }
+
+         if (!regex.test(password)) {
+            errorMessage += "Password must have at least 8 character length with mimimum 1 uppercase, 1 lowercase, 1 number and 1 special characters.\n";
+         }
+
+         if (errorMessage) {
+            document.getElementById('errorMessage').innerHTML = errorMessage;
+            document.getElementById('errorBox').style.display = 'block';
+         }
+         else {
+            document.getElementById('errorMessage').innerHTML = "";
+            document.getElementById('errorBox').style.display = 'none';
+
+            $.ajax({
+               method: "POST",
+               url: "forgotPasswordFunctions.php",
+               data: {
+                  type: "changePassword",
+                  email: email,
+                  pass: password
+               },
+               success: function (data) {
+                  var error = data.error;
+
+                  if (!error) {
+                     document.getElementById("popup").style.display = "flex";
+                  }
+               },
+            });
+         }
+      }
+   </script>
+
 </body>
 
 </html>
-
-<?php
-
-if (isset($_POST['submit'])) {
-   if ($pass == $cpass && empty($message)) {
-      mysqli_query($conn, "UPDATE users SET password = '$pass' WHERE email = '$email'") or die('query failed');
-      echo '<script>document.getElementById("popup").style.display="flex";</script>';
-   }
-}
-?>

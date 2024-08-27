@@ -129,7 +129,6 @@ $pending_orders = mysqli_fetch_all($select_orders, MYSQLI_ASSOC);
 
    <section class="orders">
       <div class="pending-order">
-
          <div class="box-container">
             <?php foreach ($pending_orders as $order) { ?>
                <div class="box">
